@@ -2,8 +2,7 @@
 
 const users = [];
 
-const addUser = ({ id, username, room, date }) => {
-  // 1 username lang sa whole chat app, not per room kay para if mo balhin ang user, dili na pud ma conflict sa username
+const addUser = ({ id, username, room }) => {
   const existingUser = users.find((user) => user.username === username);
 
   if (!username) return { error: "Username is required." };
@@ -15,7 +14,7 @@ const addUser = ({ id, username, room, date }) => {
     };
   }
 
-  const user = { id, username, room, date };
+  const user = { id, username, room };
   users.push(user);
   return {user}
 };
@@ -26,13 +25,6 @@ const userLeft = async (id) => {
     if(index !== -1) {
         return users.splice(index, 1)[0]
     }
-
-    // set isLoggedIn to false when user disconnects
-    // let currentUser = new UsersModel(id)
-    // const getUserId = await currentUser.getUserById()
-    // const result = await getUserId.userUpdateById()
-    // console.log(result)
-    // return result
 }
 
 const getCurrentUser = (id) => users.find((user) => user.id === id);

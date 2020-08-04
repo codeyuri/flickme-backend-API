@@ -61,15 +61,15 @@ module.exports = (io) => {
     })
 
     // Listen when someone is typing a message
-    // socket.on('isTyping', name => {
-    //     const user = getCurrentUser(socket.id)
+    socket.on('isTyping', async (name) => {
+        const user = await getCurrentUser(socket.id)
 
-    //     socket.broadcast.to(user.room).emit('isTyping', name);
-    // });
+        socket.broadcast.to(user.room).emit('isTyping', name);
+    });
 
     // User disconnects
-    socket.on("disconnect", () => {
-      const user = userLeft(socket.id);
+    socket.on("disconnect", async () => {
+      const user = await userLeft(socket.id);
 
       if (user) {
         io.to(user.room).emit(

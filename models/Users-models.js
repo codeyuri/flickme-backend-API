@@ -49,9 +49,9 @@ class User {
       const user = await usersCollection
         .filter(this.data.username)("username")
         .run(connection);
-      console.log(user._responses[0].r);
+
       let username = user._responses[0].r[0];
-      console.log(username)
+
       if (user._responses[0].r) {
         const room = await this.fetchRoom();
         // console.log(room)
@@ -87,7 +87,7 @@ class User {
       success: false,
       message: "Failed",
     };
-    console.log(this.data);
+    // console.log(this.data);
     try {
       if (this.data.id != "" || this.data.id != undefined) {
         const getUserInfo = await usersCollection.get(this.data).run(connection);
@@ -186,7 +186,7 @@ class User {
         .filter({ username: this.data })
         .run(connection)
         .catch((error) => console.log(error));
-      console.log(userInfo._responses.length);
+      // console.log(userInfo._responses.length);
       if (userInfo._responses.length > 0) {
         isExist = true;
       }
