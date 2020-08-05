@@ -4,11 +4,11 @@
 
 > put cloned frontend repo or folder inside the root folder of the backend/server
 
-> npm-install ( to install modules for backend )
-
-> npm run client-install ( to install modules for frontend )
+> npm-install ( both backend and frontend to install modules )
 
 > create an index for the messages table for the database using indexCreate('date) command for rethink
+
+> don't forget about the env file for local testing
 
 > npm start
 

@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client-install": "npm install --prefix ./flickme-frontend",
     "server": "nodemon ./bin/www",
     "client": "npm start --prefix ./flickme-frontend",
     "start": "concurrently \"npm run server\" \"npm run client\""
