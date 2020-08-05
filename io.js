@@ -14,12 +14,11 @@ module.exports = (io) => {
     console.log(`new connection from: ${socket.id}`);
 
     socket.on("userJoined", async (newUser, callback) => {
-        const { error, user } = addUser({ id: socket.id, ...newUser });
 
-        // If username is taken, run alert error sa client
+        //debug why is always keep getting the last user_id log out
+        const { error, user } = await addUser({socketId: socket.id, ...newUser});
+
         if (error) return callback(error);
-
-        // Join specific room
         socket.join(user.room);
 
         // Send Welcome message to current user
@@ -39,12 +38,10 @@ module.exports = (io) => {
         // Get all messages in current room
         socket.emit('getRoomMessages', await (getRoomMessagesFn(user.room)))
 
-        // no-room-chatroom
-        // io.emit('usersOnline', { users: getOnlineUsers() });
         // Display all users in room
         io.to(user.room).emit("usersOnline", {
-            room: user.room,
-            users: getOnlineUsers(user.room),
+          room: user.room,
+          users: await getOnlineUsers(user.room),
         });
 
         // no-room-chatroom
@@ -54,8 +51,8 @@ module.exports = (io) => {
     });
 
     // Listen for chat messages
-    socket.on('sendMessage', messageData => {
-        const user = getCurrentUser(socket.id)
+    socket.on('sendMessage', async (messageData) => {
+        const user = await getCurrentUser(socket.id)
 
         io.to(user.room).emit('message', messageData )
     })
@@ -72,6 +69,7 @@ module.exports = (io) => {
       const user = await userLeft(socket.id);
 
       if (user) {
+        
         io.to(user.room).emit(
           "message",
           formatMsg(admin, `${user.username} has disconnected.`)
@@ -79,7 +77,7 @@ module.exports = (io) => {
 
         io.to(user.room).emit("usersOnline", {
           room: user.room,
-          users: getOnlineUsers(user.room),
+          users: await getOnlineUsers(user.room),
         });
       }
     });

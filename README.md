@@ -1,3 +1,21 @@
+## **To run the application, follow steps below**
+
+> clone or fork this repository, and this <a href="https://github.com/codeyuri/flickme-frontend" target="_blank">frontend repo</a>
+
+> put cloned frontend repo or folder inside the root folder of the backend/server
+
+> npm-install ( to install modules for backend )
+
+> npm run client-install ( to install modules for frontend )
+
+> create an index for the messages table for the database using indexCreate('date) command for rethink
+
+> npm start
+
+> Happy Coding!
+
+## **For the TEAM developers only - Steps on forking**
+
 ## **This is our starting code base with basic MVC**
 
 We will grow the code base as we implement different requirements.

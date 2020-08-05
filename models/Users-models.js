@@ -19,6 +19,7 @@ class User {
 
         let userId = "";
         userId = addUser.generated_keys.toString();
+        // console.log(userId)
 
         dataresult = {
           success: true,
@@ -38,43 +39,36 @@ class User {
   }
 
   async login() {
-    let queryResult = {
-      username: "",
-      room: "",
-      status: false,
-      isOnline: false,
-    };
     // console.log(this.data);
     try {
       const user = await usersCollection
-        .filter(this.data.username)("username")
+        .filter({'username': this.data.username})
         .run(connection);
 
-      let username = user._responses[0].r[0];
+      await usersCollection
+        .get(user._responses[0].r[0].id)
+        .update({'room': this.data.room})
+        .run(connection)
 
-      if (user._responses[0].r) {
-        const room = await this.fetchRoom();
-        // console.log(room)
+      const userUpdated = await usersCollection
+        .get(user._responses[0].r[0].id)
+        .run(connection)
 
-        // queryResult = {
-        //   username,
-        //   room: room,
+      return userUpdated;
 
-        // };
-        return room;
-      }
     } catch (e) {
+      console.log(e)
       return false;
     }
   }
 
+  // wala lang sa nako gamita ni
   async fetchRoom() {
     try {
       const room = await usersCollection.filter(this.data)("room").run(connection);
       // console.log(user._responses[0].r);
       if (room._responses[0].r) {
         return room._responses[0].r[0];
-        // return 'test result'
       }
     } catch (e) {
       return false;
@@ -128,6 +122,32 @@ class User {
     }
     return dataresult;
   }
+
+    //User All
+    async getAllUserByFilter(isOnlineParams, getRoom) {
+      let dataresult = {
+        success: false,
+        message: "Failed",
+      };
+      try {
+        const getall = await usersCollection.filter({isOnline:isOnlineParams, room:getRoom}).run(connection);
+        if (getall._responses.length > 0) {
+          dataresult = {
+            success: true,
+            message: "Successful",
+            data: getall._responses[0].r,
+          };
+        } else {
+          dataresult = {
+            success: true,
+            message: "No Data",
+          };
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      return dataresult;
+    }
 
   //User Update
   async userUpdateById() {
@@ -195,6 +215,7 @@ class User {
     }
     return isExist;
   }
+
 }
 
 module.exports = User;

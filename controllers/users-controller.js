@@ -1,14 +1,16 @@
 let Users = require("../models/Users-models");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-dotenv.config();
 
+// @POST
+// Create A User
 exports.apiCreate = async (req, res) => {
   let createUser = new Users(req.body);
   let isExist = new Users(req.body.username);
   const resultIfExist = await isExist.isUserExist();
 
   let resultContainer = [];
+
+  // Check if user exists first then create a user if it doesn't exists
   if (!resultIfExist) {
     const result = await createUser.create().catch((err) => console.log(err));
     if (result.success) {
@@ -31,14 +33,18 @@ exports.apiCreate = async (req, res) => {
   }
 };
 
+// @POST
 // Login
 exports.apiLogin = async function (req, res) {
   let user = new Users(req.body);
   user
     .login()
     .then((result) => {
+      console.log(result)
+      console.log(result)
+      console.log(result)
+      console.log(result)
       if (result) {
-        // console.log(result);
         res.json({
           token: jwt.sign(
             {
@@ -47,10 +53,11 @@ exports.apiLogin = async function (req, res) {
             process.env.JWTSECRET,
             { expiresIn: "1d" }
           ),
-          room: result,
+          id: result.id,
+          room: result.room,
           username: user.data.username,
           status: true,
-          isOnline: true,
+          isOnline: result.isOnline,
         });
       } else {
         res.json({
@@ -98,36 +105,5 @@ exports.apiUserDelete = async (req, res) => {
 exports.apiUserChecker = async (req, res) => {
   let userUpdate = new Users(req.query.username);
   const result = await userUpdate.isUserExist();
-  res.json(result);
-};
-
-exports.apiGetAll = async (req, res) => {
-  let user = new Users((req.body = null));
-  res.json(await user.getAll());
-};
-
-exports.apiUserGet = async (req, res) => {
-  // console.log(req.query.id)// query or params debug mode
-  let getUserId = new Users(req.query.id);
-  const result = await getUserId.getUserById();
-  res.json(result);
-};
-
-exports.apiUpdateUser = async (req, res) => {
-  let userObject = {
-    username: req.body.username,
-    room_id: req.body.room_id,
-    isOnline: true,
-  };
-  // console.log(userObject , req.query.id)// query or params debug mode
-  let userUpdate = new Users(req.query.id, userObject);
-  const result = await userUpdate.userUpdateById();
-  res.json(result);
-};
-
-exports.apiUserDelete = async (req, res) => {
-  let user_id = req.query.id;
-  let userUpdate = new Users(user_id);
-  const result = await userUpdate.userDeleteById();
   res.json(result);
 };
